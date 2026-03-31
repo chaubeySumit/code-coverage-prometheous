@@ -14,7 +14,6 @@ We now exclude health/metrics endpoints from the denominator to ensure coverage 
 | **All Known APIs** | `count by (uri, service) (http_requests_total{service=~"$service", uri!~"/health.*|/metrics|/ping"})` |
 | **Covered APIs** | `count by (uri, service) (qa_api_tested_total{service=~"$service"}) and ...` |
 | **Coverage %** | `count(covered) / count(all known)` |
-| **Regression Alert**| `current_coverage < bool (coverage offset 5m)` |
 | **Traffic Weight** | `topk(10, sum(http_requests_total) unless sum(qa_api_tested_total))` |
 
 > [!NOTE]

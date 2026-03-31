@@ -11,13 +11,7 @@ The "Current Coverage %" panel now features a dynamic background color:
 - 🟠 **Amber:** 50% - 80%
 - 🟢 **Green:** Above 80%
 
-## 3. Coverage Regression Alert
-A brand new panel that detects if coverage has dropped in the last 5 minutes.
-- ✅ Shows **"No Regression"** and Green when coverage is stable or increasing.
-- 🚨 Shows **"Coverage Dropped!"** and Red if a test was removed or a new service was added without tests.
-*Note: This panel shows "No data" for the first 5 minutes after a system restart as it builds history.*
-
-## 4. Top Uncovered by Traffic Volume
+## 3. Top Uncovered by Traffic Volume
 A new table that ranks your untested APIs by how many hits they receive from real users. This allows your QA team to prioritize testing high-traffic endpoints over low-risk ones.
 
 ---

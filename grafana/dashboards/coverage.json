@@ -103,54 +103,6 @@
     {
       "collapsed": false,
       "gridPos": { "h": 1, "w": 24, "x": 0, "y": 7 },
-      "id": 11,
-      "title": "🚨 Coverage Regression Alert",
-      "type": "row"
-    },
-    {
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "fieldConfig": {
-        "defaults": {
-          "color": { "mode": "thresholds" },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              { "color": "green", "value": null },
-              { "color": "red", "value": 1 }
-            ]
-          },
-          "mappings": [
-            { "options": { "0": { "text": "✅ No Regression" }, "1": { "text": "🚨 Coverage Dropped!" } }, "type": "value" }
-          ],
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": { "h": 4, "w": 24, "x": 0, "y": 8 },
-      "id": 9,
-      "options": {
-        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
-        "orientation": "auto",
-        "textMode": "auto",
-        "colorMode": "background",
-        "graphMode": "none",
-        "justifyMode": "auto"
-      },
-      "targets": [
-        {
-          "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "(count(count by (uri) (qa_api_tested_total{service=~\"$service\"}) and count by (uri) (http_requests_total{service=~\"$service\", uri!~\"/healthz|/health|/metrics|/ping|/livez|/readyz\"})) / count(count by (uri) (http_requests_total{service=~\"$service\", uri!~\"/healthz|/health|/metrics|/ping|/livez|/readyz\"}))) < bool (count(count by (uri) (qa_api_tested_total{service=~\"$service\"} offset 5m) and count by (uri) (http_requests_total{service=~\"$service\", uri!~\"/healthz|/health|/metrics|/ping|/livez|/readyz\"} offset 5m)) / count(count by (uri) (http_requests_total{service=~\"$service\", uri!~\"/healthz|/health|/metrics|/ping|/livez|/readyz\"} offset 5m)))",
-          "format": "time_series",
-          "instant": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Coverage Regression Status (vs 5 min ago)",
-      "type": "stat"
-    },
-    {
-      "collapsed": false,
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 12 },
       "id": 12,
       "title": "📋 API Coverage Details",
       "type": "row"

@@ -37,11 +37,10 @@ The QA Automation Framework pushes its own coverage metric (`qa_api_tested_total
 
 ### 6.1 Coverage Intelligence
 1. **RAG Indicator per Service** *(Implemented)* — Red/Amber/Green coverage badge per service on dashboard.
-2. **Coverage Regression Alert** *(Implemented)* — Alert fires if coverage % drops between consecutive QA runs.
-3. **Top Uncovered by Traffic Volume** *(Implemented)* — Ranks uncovered APIs by production hit count so teams fix high-impact gaps first.
-4. **Exclusion Configuration** *(Implemented)* — Environment variable to exclude health-check endpoints (`/healthz`, `/metrics`, `/ping`) from coverage denominator.
-5. **New API Detection Alert** — Alert if a new API appears in Prometheus with no QA test within 24 hours.
-6. **Quality Gates** — Fail the CI/CD pipeline if any service drops below a configurable minimum coverage %.
+2. **Top Uncovered by Traffic Volume** *(Implemented)* — Ranks uncovered APIs by production hit count so teams fix high-impact gaps first.
+3. **Exclusion Configuration** *(Implemented)* — Environment variable to exclude health-check endpoints (`/healthz`, `/metrics`, `/ping`) from coverage denominator.
+4. **New API Detection Alert** — Alert if a new API appears in Prometheus with no QA test within 24 hours.
+5. **Quality Gates** — Fail the CI/CD pipeline if any service drops below a configurable minimum coverage %.
 
 ### 6.2 Richer Dashboard Panels
 7. **Coverage Heatmap by HTTP Method** — Break down coverage by `GET`, `POST`, `PUT`, `DELETE` to surface untested destructive operations.
@@ -73,6 +72,6 @@ The QA Automation Framework pushes its own coverage metric (`qa_api_tested_total
 - **Reduced Test Execution Waste:** Identifies "Ghost Tests" (tests hitting endpoints that no longer exist), allowing teams to trim their test suites and reduce CI/CD runtimes.
 
 ### 7.3 Quality & Risk Management
-- **Early Regression Detection:** The V2 Regression Alert stops broken tests or untested code from leaking into production by surfacing quality drops in real-time.
+- **Early Gap Detection:** Surfacing quality gaps in real-time.
 - **Traffic-Weighted Prioritization:** Instead of trying to hit 100% coverage on every single utility API, teams can prioritize 100% coverage on the **top 10 most-hit production endpoints**.
 - **Cross-Service Visibility:** Prevents "Coverage Masking" where high coverage in one service hides dangerous gaps in another, crucial for microservice health.
