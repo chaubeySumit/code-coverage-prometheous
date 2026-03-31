@@ -1,6 +1,6 @@
 {
   "annotations": { "list": [] },
-  "version": 10,
+  "version": 11,
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
@@ -39,7 +39,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "count(count by (uri) (qa_api_tested_total) and count by (uri) (http_requests_total)) / count(count by (uri) (http_requests_total))",
+          "expr": "count(count by (uri) (qa_api_tested_total{service=~\"$service\"}) and count by (uri) (http_requests_total{service=~\"$service\"})) / count(count by (uri) (http_requests_total{service=~\"$service\"}))",
           "format": "time_series",
           "instant": true,
           "refId": "A"
@@ -100,7 +100,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "count(count by (uri) (qa_api_tested_total) and count by (uri) (http_requests_total)) / count(count by (uri) (http_requests_total))",
+          "expr": "count(count by (uri) (qa_api_tested_total{service=~\"$service\"}) and count by (uri) (http_requests_total{service=~\"$service\"})) / count(count by (uri) (http_requests_total{service=~\"$service\"}))",
           "format": "time_series",
           "instant": false,
           "refId": "A"
@@ -119,7 +119,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "count by (uri) (qa_api_tested_total) and count by (uri) (http_requests_total)",
+          "expr": "count by (uri, service) (qa_api_tested_total{service=~\"$service\"}) and count by (uri, service) (http_requests_total{service=~\"$service\"})",
           "format": "table",
           "instant": true,
           "refId": "A"
@@ -138,7 +138,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "count by (uri) (http_requests_total) unless count by (uri) (qa_api_tested_total)",
+          "expr": "count by (uri, service) (http_requests_total{service=~\"$service\"}) unless count by (uri, service) (qa_api_tested_total{service=~\"$service\"})",
           "format": "table",
           "instant": true,
           "refId": "A"
@@ -157,7 +157,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "count by (uri) (qa_api_tested_total) unless count by (uri) (http_requests_total)",
+          "expr": "count by (uri, service) (qa_api_tested_total{service=~\"$service\"}) unless count by (uri, service) (http_requests_total{service=~\"$service\"})",
           "format": "table",
           "instant": true,
           "refId": "A"
@@ -169,7 +169,26 @@
   ],
   "refresh": "5s",
   "schemaVersion": 38,
+  "templating": {
+    "list": [
+      {
+        "current": { "selected": false, "text": "All", "value": "$__all" },
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
+        "definition": "label_values(http_requests_total, service)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Service",
+        "multi": true,
+        "name": "service",
+        "options": [],
+        "query": "label_values(http_requests_total, service)",
+        "refresh": 1,
+        "sort": 1,
+        "type": "query"
+      }
+    ]
+  },
   "timezone": "",
-  "title": "QA API Coverage Analysis",
+  "title": "QA API Coverage (Multi-Service)",
   "uid": "qa-coverage-features"
 }

@@ -1,6 +1,7 @@
 import requests
 import pytest
 from prometheus_client import CollectorRegistry, Counter, push_to_gateway
+import os
 
 # This is the registry we will push to the Gateway
 REGISTRY = CollectorRegistry()
@@ -9,11 +10,9 @@ REGISTRY = CollectorRegistry()
 QA_API_TESTED = Counter(
     "qa_api_tested_total",
     "Number of times QA tested a specific API endpoint",
-    ["uri", "method"],
+    ["uri", "method", "service"],
     registry=REGISTRY
 )
-
-import os
 
 # Configuration for the PoC
 BASE_URL = os.getenv("API_URL", "http://localhost:8080")
@@ -31,12 +30,12 @@ def push_metrics_after_tests():
         print(f"Failed to push metrics: {e}")
 
 # Helper to automatically record QA coverage 
-def qa_get(uri):
+def qa_get(uri, service):
     # Call the actual API
     response = requests.get(f"{BASE_URL}{uri}")
     
     # Inform Prometheus that QA tested this URI!
-    QA_API_TESTED.labels(uri=uri, method="GET").inc()
+    QA_API_TESTED.labels(uri=uri, method="GET", service=service).inc()
     
     return response
 
@@ -44,7 +43,7 @@ def qa_get(uri):
 
 def test_users_endpoint_is_tested_by_qa():
     """ QA explicitly tests the /api/users endpoint. """
-    resp = qa_get("/api/users")
+    resp = qa_get("/api/users", service="user-service")
     assert resp.status_code == 200
 
 def test_deprecated_endpoint():
@@ -52,7 +51,7 @@ def test_deprecated_endpoint():
     QA tests an endpoint that no longer exists in Prometheus (the Go code deleted it).
     We manually push the metric directly to simulate QA trying to test it.
     """
-    QA_API_TESTED.labels(uri="/api/deprecated-v1", method="GET").inc()
+    QA_API_TESTED.labels(uri="/api/deprecated-v1", method="GET", service="user-service").inc()
 
 # NOTICE: We do NOT write a test for /api/checkout.
 # This simulates a "Missing Test" so we can see the uncovered API in Grafana!

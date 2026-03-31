@@ -16,15 +16,15 @@ var (
 			Name: "http_requests_total",
 			Help: "Total number of HTTP requests.",
 		},
-		[]string{"method", "uri", "status"},
+		[]string{"method", "uri", "status", "service"},
 	)
 )
 
-// Generic middleware just to tally requests
-func metricsMiddleware(next http.Handler) http.Handler {
+// Generic middleware just to tally requests, now injecting the service name
+func metricsMiddleware(serviceName string, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Just incrementing with Method and URI
-		httpRequestsTotal.WithLabelValues(r.Method, r.URL.Path, "200").Inc()
+		// Just incrementing with Method, URI, and Service Name
+		httpRequestsTotal.WithLabelValues(r.Method, r.URL.Path, "200", serviceName).Inc()
 		next.ServeHTTP(w, r)
 	})
 }
@@ -37,9 +37,9 @@ func mockHandler(message string) http.HandlerFunc {
 }
 
 func main() {
-	// Let's create two APIs: /api/users and /api/checkout
-	http.Handle("/api/users", metricsMiddleware(mockHandler(`{"users": ["Alice", "Bob"]}`)))
-	http.Handle("/api/checkout", metricsMiddleware(mockHandler(`{"status": "payment successful"}`)))
+	// Let's tag the two APIs to simulate traffic hitting two different microservices!
+	http.Handle("/api/users", metricsMiddleware("user-service", mockHandler(`{"users": ["Alice", "Bob"]}`)))
+	http.Handle("/api/checkout", metricsMiddleware("checkout-service", mockHandler(`{"status": "payment successful"}`)))
 
 	// Expose the metrics endpoint for Prometheus
 	http.Handle("/metrics", promhttp.Handler())
