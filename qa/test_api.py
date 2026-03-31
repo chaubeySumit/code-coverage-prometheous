@@ -37,8 +37,7 @@ def qa_get(base_url, uri, service):
     return response
 
 # ---- USER SERVICE TESTS ----
-# Testing: /api/users and /api/login
-# Intentionally NOT testing: /api/profile (to show as uncovered)
+# Testing: /api/users, /api/login, /api/profile (100% coverage)
 
 def test_user_service_users():
     resp = qa_get(USER_SERVICE_URL, "/api/users", "user-service")
@@ -48,12 +47,23 @@ def test_user_service_login():
     resp = qa_get(USER_SERVICE_URL, "/api/login", "user-service")
     assert resp.status_code == 200
 
+def test_user_service_profile():
+    resp = qa_get(USER_SERVICE_URL, "/api/profile", "user-service")
+    assert resp.status_code == 200
+
 # ---- CHECKOUT SERVICE TESTS ----
-# Testing: /api/checkout only
-# Intentionally NOT testing: /api/payment and /api/orders (to show as uncovered)
+# Testing: /api/checkout, /api/payment, /api/orders (100% coverage)
 
 def test_checkout_service_checkout():
     resp = qa_get(CHECKOUT_SERVICE_URL, "/api/checkout", "checkout-service")
+    assert resp.status_code == 200
+
+def test_checkout_service_payment():
+    resp = qa_get(CHECKOUT_SERVICE_URL, "/api/payment", "checkout-service")
+    assert resp.status_code == 200
+
+def test_checkout_service_orders():
+    resp = qa_get(CHECKOUT_SERVICE_URL, "/api/orders", "checkout-service")
     assert resp.status_code == 200
 
 # ---- INVENTORY SERVICE TESTS ----

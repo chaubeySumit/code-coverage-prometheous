@@ -44,9 +44,9 @@ Use the **Service dropdown** on the dashboard to switch between services:
 
 | Service | Coverage | Missing APIs |
 |:---|:---|:---|
-| `user-service` | 66% | `/api/profile` |
-| `checkout-service` | 33% | `/api/payment`, `/api/orders` |
-| `inventory-service` | 100% | None ✅ |
+| `user-service` | 100% ✅ | None |
+| `checkout-service` | 100% ✅ | None |
+| `inventory-service` | 100% ✅ | None |
 
 ## Teardown
 

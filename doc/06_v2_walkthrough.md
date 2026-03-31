@@ -9,7 +9,7 @@ You can now define infrastructural endpoints (like `/healthz`, `/metrics`, etc.)
 The "Current Coverage %" panel now features a dynamic background color:
 - 🔴 **Red:** Below 50%
 - 🟠 **Amber:** 50% - 80%
-- 🟢 **Green:** Above 80%
+- 🟢 **Green:** Above 80% (All services currently in this state! ✅)
 
 ## 3. Top Uncovered by Traffic Volume
 A new table that ranks your untested APIs by how many hits they receive from real users. This allows your QA team to prioritize testing high-traffic endpoints over low-risk ones.
