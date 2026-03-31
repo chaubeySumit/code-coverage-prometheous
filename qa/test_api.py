@@ -2,6 +2,7 @@ import requests
 import pytest
 from prometheus_client import CollectorRegistry, Counter, push_to_gateway
 import os
+from qa_exclude import is_excluded
 
 REGISTRY = CollectorRegistry()
 
@@ -30,7 +31,9 @@ def push_metrics_after_tests():
 
 def qa_get(base_url, uri, service):
     response = requests.get(f"{base_url}{uri}")
-    QA_API_TESTED.labels(uri=uri, method="GET", service=service).inc()
+    # Only track coverage for non-excluded endpoints
+    if not is_excluded(uri):
+        QA_API_TESTED.labels(uri=uri, method="GET", service=service).inc()
     return response
 
 # ---- USER SERVICE TESTS ----
