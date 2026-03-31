@@ -1,0 +1,44 @@
+package main
+
+import (
+	"log"
+	"net/http"
+
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+)
+
+var httpRequestsTotal = promauto.NewCounterVec(
+	prometheus.CounterOpts{
+		Name: "http_requests_total",
+		Help: "Total number of HTTP requests.",
+	},
+	[]string{"method", "uri", "status", "service"},
+)
+
+const serviceName = "inventory-service"
+
+func metricsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		httpRequestsTotal.WithLabelValues(r.Method, r.URL.Path, "200", serviceName).Inc()
+		next.ServeHTTP(w, r)
+	})
+}
+
+func mockHandler(msg string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(msg))
+	}
+}
+
+func main() {
+	http.Handle("/api/products",   metricsMiddleware(mockHandler(`{"products":["Laptop","Phone"]}`)))
+	http.Handle("/api/stock",      metricsMiddleware(mockHandler(`{"stock":100}`)))
+	http.Handle("/api/categories", metricsMiddleware(mockHandler(`{"categories":["Electronics"]}`)))
+	http.Handle("/metrics",        promhttp.Handler())
+
+	log.Printf("%s running on :8083", serviceName)
+	log.Fatal(http.ListenAndServe(":8083", nil))
+}

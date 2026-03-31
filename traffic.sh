@@ -1,8 +1,21 @@
 #!/bin/sh
-# Generate traffic to the backend so Prometheus knows the APIs exist
+# Simulates real users hitting all 3 microservices
 
 while true; do
-  curl -s http://go-backend:8080/api/users > /dev/null
-  curl -s http://go-backend:8080/api/checkout > /dev/null
+  # user-service traffic
+  curl -s http://user-service:8081/api/users   > /dev/null
+  curl -s http://user-service:8081/api/profile > /dev/null
+  curl -s http://user-service:8081/api/login   > /dev/null
+
+  # checkout-service traffic
+  curl -s http://checkout-service:8082/api/checkout > /dev/null
+  curl -s http://checkout-service:8082/api/payment  > /dev/null
+  curl -s http://checkout-service:8082/api/orders   > /dev/null
+
+  # inventory-service traffic
+  curl -s http://inventory-service:8083/api/products   > /dev/null
+  curl -s http://inventory-service:8083/api/stock      > /dev/null
+  curl -s http://inventory-service:8083/api/categories > /dev/null
+
   sleep 2
 done

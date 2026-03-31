@@ -1,15 +1,29 @@
 version: '3.8'
 
 services:
-  # 1. The Mock Go Backend (No QA specific code in it!)
-  go-backend:
-    build: ./backend
+  # --- Microservices ---
+  user-service:
+    build: ./services/user-service
     ports:
-      - "8080:8080"
+      - "8081:8081"
     networks:
       - poc-network
 
-  # 2. Prometheus Pushgateway (Where Python QA will push its own metrics)
+  checkout-service:
+    build: ./services/checkout-service
+    ports:
+      - "8082:8082"
+    networks:
+      - poc-network
+
+  inventory-service:
+    build: ./services/inventory-service
+    ports:
+      - "8083:8083"
+    networks:
+      - poc-network
+
+  # --- Prometheus Pushgateway ---
   pushgateway:
     image: prom/pushgateway:latest
     ports:
@@ -17,7 +31,7 @@ services:
     networks:
       - poc-network
 
-  # 3. Prometheus Server (Scrapes Go backend AND Pushgateway)
+  # --- Prometheus Server ---
   prometheus:
     image: prom/prometheus:latest
     volumes:
@@ -27,17 +41,18 @@ services:
     networks:
       - poc-network
     depends_on:
-      - go-backend
+      - user-service
+      - checkout-service
+      - inventory-service
       - pushgateway
 
-  # 4. Grafana
+  # --- Grafana ---
   grafana:
     image: grafana/grafana:latest
     ports:
       - "3000:3000"
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
-    # We will mount provisioning files to automatically add Prometheus as source
     volumes:
       - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
       - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
@@ -45,25 +60,31 @@ services:
     networks:
       - poc-network
 
-  # 5. Traffic Generator (Simulates Real Users)
+  # --- Traffic Generator (Real Users) ---
   traffic-generator:
     image: alpine/curl
     volumes:
       - ./traffic.sh:/traffic.sh
     command: /bin/sh /traffic.sh
     depends_on:
-      - go-backend
+      - user-service
+      - checkout-service
+      - inventory-service
     networks:
       - poc-network
 
-  # 6. QA Automation (Runs tests, pushes metrics, then exits)
+  # --- QA Automation ---
   qa-automation:
     build: ./qa
     environment:
-      - API_URL=http://go-backend:8080
+      - USER_SERVICE_URL=http://user-service:8081
+      - CHECKOUT_SERVICE_URL=http://checkout-service:8082
+      - INVENTORY_SERVICE_URL=http://inventory-service:8083
       - PUSHGATEWAY_URL=pushgateway:9091
     depends_on:
-      - go-backend
+      - user-service
+      - checkout-service
+      - inventory-service
       - pushgateway
     networks:
       - poc-network
