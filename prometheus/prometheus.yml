@@ -1,0 +1,14 @@
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  # 1. Scrape the Go Backend (The source of all known APIs)
+  - job_name: 'go_backend'
+    static_configs:
+      - targets: ['go-backend:8080']
+
+  # 2. Scrape the Pushgateway (The source of QA logic APIs)
+  - job_name: 'pushgateway'
+    honor_labels: true # CRITICAL: Respect the 'job' and labels defined by QA
+    static_configs:
+      - targets: ['pushgateway:9091']

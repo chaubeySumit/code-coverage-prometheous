@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # 1. The Mock Go Backend (No QA specific code in it!)
+  go-backend:
+    build: ./backend
+    ports:
+      - "8080:8080"
+    networks:
+      - poc-network
+
+  # 2. Prometheus Pushgateway (Where Python QA will push its own metrics)
+  pushgateway:
+    image: prom/pushgateway:latest
+    ports:
+      - "9091:9091"
+    networks:
+      - poc-network
+
+  # 3. Prometheus Server (Scrapes Go backend AND Pushgateway)
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - poc-network
+    depends_on:
+      - go-backend
+      - pushgateway
+
+  # 4. Grafana
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    # We will mount provisioning files to automatically add Prometheus as source
+    volumes:
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+    networks:
+      - poc-network
+
+  # 5. Traffic Generator (Simulates Real Users)
+  traffic-generator:
+    image: alpine/curl
+    volumes:
+      - ./traffic.sh:/traffic.sh
+    command: /bin/sh /traffic.sh
+    depends_on:
+      - go-backend
+    networks:
+      - poc-network
+
+  # 6. QA Automation (Runs tests, pushes metrics, then exits)
+  qa-automation:
+    build: ./qa
+    environment:
+      - API_URL=http://go-backend:8080
+      - PUSHGATEWAY_URL=pushgateway:9091
+    depends_on:
+      - go-backend
+      - pushgateway
+    networks:
+      - poc-network
+
+networks:
+  poc-network:
+    driver: bridge
