@@ -20,11 +20,11 @@
         "defaults": {
           "color": { "mode": "thresholds" },
           "thresholds": {
-            "mode": "percentage",
+            "mode": "absolute",
             "steps": [
               { "color": "red", "value": null },
-              { "color": "orange", "value": 50 },
-              { "color": "green", "value": 80 }
+              { "color": "orange", "value": 0.5 },
+              { "color": "green", "value": 0.8 }
             ]
           },
           "unit": "percentunit",
@@ -71,11 +71,11 @@
             "thresholdsStyle": { "mode": "dashed" }
           },
           "thresholds": {
-            "mode": "percentage",
+            "mode": "absolute",
             "steps": [
               { "color": "red", "value": null },
-              { "color": "orange", "value": 50 },
-              { "color": "green", "value": 80 }
+              { "color": "orange", "value": 0.5 },
+              { "color": "green", "value": 0.8 }
             ]
           },
           "unit": "percentunit"

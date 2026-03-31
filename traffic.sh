@@ -3,9 +3,10 @@
 
 while true; do
   # user-service traffic
-  curl -s http://user-service:8081/api/users   > /dev/null
-  curl -s http://user-service:8081/api/profile > /dev/null
-  curl -s http://user-service:8081/api/login   > /dev/null
+  curl -s http://user-service:8081/api/users    > /dev/null
+  curl -s http://user-service:8081/api/profile  > /dev/null
+  curl -s http://user-service:8081/api/login    > /dev/null
+  curl -s http://user-service:8081/api/settings > /dev/null
 
   # checkout-service traffic
   curl -s http://checkout-service:8082/api/checkout > /dev/null

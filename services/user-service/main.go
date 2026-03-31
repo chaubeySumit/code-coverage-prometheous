@@ -34,10 +34,11 @@ func mockHandler(msg string) http.HandlerFunc {
 }
 
 func main() {
-	http.Handle("/api/users",   metricsMiddleware(mockHandler(`{"users":["Alice","Bob"]}`)))
-	http.Handle("/api/profile", metricsMiddleware(mockHandler(`{"profile":"Alice"}`)))
-	http.Handle("/api/login",   metricsMiddleware(mockHandler(`{"token":"abc123"}`)))
-	http.Handle("/metrics",     promhttp.Handler())
+	http.Handle("/api/users",    metricsMiddleware(mockHandler(`{"users":["Alice","Bob"]}`)))
+	http.Handle("/api/profile",  metricsMiddleware(mockHandler(`{"profile":"Alice"}`)))
+	http.Handle("/api/login",    metricsMiddleware(mockHandler(`{"token":"abc123"}`)))
+	http.Handle("/api/settings", metricsMiddleware(mockHandler(`{"theme":"dark"}`)))
+	http.Handle("/metrics",      promhttp.Handler())
 
 	log.Printf("%s running on :8081", serviceName)
 	log.Fatal(http.ListenAndServe(":8081", nil))
