@@ -1,6 +1,6 @@
 {
   "annotations": { "list": [] },
-  "version": 11,
+  "version": 12,
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
@@ -125,6 +125,17 @@
           "refId": "A"
         }
       ],
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "Value": true
+            }
+          }
+        }
+      ],
       "title": "✅ 1. Covered API List",
       "type": "table"
     },
@@ -144,6 +155,17 @@
           "refId": "A"
         }
       ],
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "Value": true
+            }
+          }
+        }
+      ],
       "title": "🚨 2. Uncovered API List",
       "type": "table"
     },
@@ -161,6 +183,17 @@
           "format": "table",
           "instant": true,
           "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "Value": true
+            }
+          }
         }
       ],
       "title": "👻 4. QA Tested but DEPRECATED in Code",
