@@ -1,6 +1,6 @@
 # V2 Feature Walkthrough
 
-We have successfully implemented 4 major enterprise features into the QA Coverage Dashboard.
+We have successfully implemented 3 major enterprise features into the QA Coverage Dashboard.
 
 ## 1. Exclusion Configuration (`qa_exclude.py`)
 You can now define infrastructural endpoints (like `/healthz`, `/metrics`, etc.) in a central file. These are automatically excluded from the "Uncovered API" list and the total Coverage Percentage calculation, ensuring your scores are accurate.
